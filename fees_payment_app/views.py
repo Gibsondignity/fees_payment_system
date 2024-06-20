@@ -9,6 +9,10 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
+
+
+
+
 def index(request):
     
     return render(request, 'index.html')
@@ -28,7 +32,12 @@ def custom_login(request):
             return redirect(reverse('student_dashboard'))
         else:
             messages.error(request, "Invalid username or password.")
+    if request.user.is_authenticated:
+        return redirect(reverse('student_dashboard'))
     return render(request, 'login.html')
+
+
+
 
 
 
@@ -43,6 +52,38 @@ def student_dashboard(request):
 def student_list(request):
     students = Student.objects.all()
     return render(request, 'student_list.html', {'students': students})
+
+
+
+
+def fees_collection(request):
+    
+    
+    return render(request, "student/fees-collection.html")
+
+
+def pay_fees(request):
+    
+    
+    return render(request, "student/pay_fees.html")
+
+
+
+
+def fees_receipt(request):
+    
+    
+    return render(request, "student/fees-receipt.html")
+
+
+
+
+def profile(request):
+    
+    
+    return render(request, "student/profile.html")
+
+
 
 
 

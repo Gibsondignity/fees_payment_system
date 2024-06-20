@@ -12,11 +12,20 @@
     <link rel="icon" type="image/png" sizes="16x16" href="{% static 'dashboard/images/favicon.png' %}">
     <link rel="stylesheet" href="{% static 'dashboard/vendor/jqvmap/css/jqvmap.min.css' %}">
 	<link rel="stylesheet" href="{% static 'dashboard/vendor/chartist/css/chartist.min.css' %}">
+
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon.png">
+    <link rel="stylesheet" href="{% static 'dashboard/vendor/bootstrap-select/dist/css/bootstrap-select.min.css' %}">
+    <!-- Datatable -->
+    <link href="{% static 'dashboard/vendor/datatables/css/jquery.dataTables.min.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'dashboard/css/style.css' %}">
 	<!-- Summernote -->
     <link href="vendor/summernote/summernote.css" rel="stylesheet">
 	<link rel="stylesheet" href="{% static 'dashboard/vendor/bootstrap-select/dist/css/bootstrap-select.min.css' %}">
     <link rel="stylesheet" href="{% static 'dashboard/css/style.css' %}">
     <link rel="stylesheet" href="{% static 'dashboard/css/skin-3.css' %}">
+
+    {% block header %}
+    {% endblock header %}
 
 </head>
 
@@ -98,13 +107,15 @@
     <!--**********************************
         Main wrapper end
     ***********************************-->
-
+    {% block script %}
+    {% endblock script %}
     <!--**********************************
         Scripts
+    
     ***********************************-->
     <!-- Required vendors -->
     {% include "student/script.html" %}
     
-		
+	
 </body>
 </html>

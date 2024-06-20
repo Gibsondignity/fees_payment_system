@@ -4,7 +4,7 @@
     <div class="dlabnav-scroll">
         <ul class="metismenu" id="menu">
             <li class="nav-label first">Main Menu</li>
-            <li><a class="has-arrow" href="#" aria-expanded="false">
+            <li><a class="has-arrow" href="{% url 'student_dashboard' %}" aria-expanded="false">
                     <i class="la la-home"></i>
                     <span class="nav-text">Dashboard</span>
                 </a>
@@ -16,13 +16,13 @@
                 <span class="nav-text">Fees</span>
             </a>
             <ul aria-expanded="false">
-                <li><a href="fees-collection.html">Fees Collection</a></li>
-                <li><a href="add-fees.html">Add Fees</a></li>
-                <li><a href="fees-receipt.html">Fees Receipt</a></li>
+                <li><a href="{% url 'fees_collection' %}">Fees Collection</a></li>
+                <li><a href="{% url 'pay_fees' %}">Add Fees</a></li>
+                <li><a href="{% url 'fees_receipt' %}">Fees Receipt</a></li>
             </ul>
             </li>
             
-            <li><a class="has-arrow" href="#" aria-expanded="false">
+            <li><a class="has-arrow" href="{% url 'profile' %}" aria-expanded="false">
                     <i class="la la-users"></i>
                     <span class="nav-text">Profle</span>
                 </a>

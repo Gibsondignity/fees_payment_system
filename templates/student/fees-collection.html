@@ -1,0 +1,79 @@
+﻿{% extends "student/index.html" %}
+
+
+
+{% block content %}
+<div class="content-body">
+    <!-- row -->
+    <div class="container-fluid">
+
+        <div class="row page-titles mx-0">
+            <div class="col-sm-6 p-md-0">
+                <div class="welcome-text">
+                    <h4>Fees Collection</h4>
+                </div>
+            </div>
+            <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                    <li class="breadcrumb-item active"><a href="javascript:void(0);">Fees</a></li>
+                    <li class="breadcrumb-item active"><a href="javascript:void(0);">Fees Collection</a></li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">Fees Collection</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table id="example4" class="display" style="min-width: 845px">
+                                <thead>
+                                    <tr>
+                                        <th>Roll No</th>
+                                        <th>Student Name</th>
+                                        <th>Invoice number</th>
+                                        <th>Fees Type </th>
+                                        <th>Payment Type </th>
+                                        <th>Status </th>
+                                        <th>Date</th>
+                                        <th>Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>01</td>
+                                        <td>Tiger Nixon</td>
+                                        <td>#54605</td>
+                                        <td>Library</td>
+                                        <td>Cash</td>
+                                        <td><span class="badge badge-success">Paid</span></td>
+                                        <td>2011/04/25</td>
+                                        <td><strong>120$</strong></td>
+                                    </tr>
+                                    <tr>
+                                        <td>02</td>
+                                        <td>Garrett Winters</td>
+                                        <td>#54687</td>
+                                        <td>Library</td>
+                                        <td>Credit Card</td>
+                                        <td><span class="badge badge-warning">Panding</span></td>
+                                        <td>2011/07/25</td>
+                                        <td><strong>120$</strong></td>
+                                    </tr>
+                                    
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock content %}

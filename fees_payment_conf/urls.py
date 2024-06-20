@@ -31,12 +31,18 @@ urlpatterns = [
     path('login/', views.custom_login, name='login'),
     
     # Student URLs
-    path('student/dasboard', views.student_dashboard, name='student_dashboard'),
+    path('dashboard', views.student_dashboard, name='student_dashboard'),
     path('students/', views.student_list, name='student_list'),
     path('students/<int:pk>/', views.student_detail, name='student_detail'),
     path('students/new/', views.student_create, name='student_create'),
     path('students/<int:pk>/edit/', views.student_update, name='student_update'),
     path('students/<int:pk>/delete/', views.student_delete, name='student_delete'),
+    
+    path('fees_collection', views.fees_collection, name='fees_collection'),
+    path('pay-fees', views.pay_fees, name='pay_fees'),
+    path('fees_receipt', views.fees_receipt, name='fees_receipt'),
+    path('profile', views.profile, name='profile'),
+
 
     # Course URLs
     path('courses/', views.course_list, name='course_list'),
