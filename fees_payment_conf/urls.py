@@ -81,7 +81,7 @@ urlpatterns = [
 
 
     path('<str:ref>/', views.verify_payment, name='verify_payment'),  
-    path('<int:id>/<str:ref>', views.make_payment, name='make_payment'),  
+    path('make_payment', views.make_payment, name='make_payment'),  
     
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

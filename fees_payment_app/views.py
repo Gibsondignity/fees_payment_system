@@ -69,21 +69,30 @@ def student_tuition(request):
 
 
 def pay_fees(request):
-    if request.method == "POST":
-        amount = request.POST['amount']
-        payment = Payment
-        user = request.user
-        student = Student.objects.filter(user=user).first()
-        context = {'ref': payment.ref,
-                    'amount': float(payment.amount),
-                        'email': student,
-                        'payment_date': payment.payment_date,
-                        'key': settings.PAYSTACK_PUBLIC_KEY,
-                        'id': id,
-                   }
+
+    user = request.user
+    student = Student.objects.filter(user=user).first()
+    fee = Fee.objects.filter(student=student).all()
+    context = {
+        'fee': fee
+                }
+        
+    return render(request, "student/initiate_payment.html", context)
+    # return render(request, "student/pay_fees.html")
+
+def make_payment(request):
+    amount = request.POST['amount']
+    payment = Payment
+    user = request.user
+    student = Student.objects.filter(user=user).first()
+    context = {'ref': payment.ref,
+                'amount': float(payment.amount),
+                    'email': student,
+                    'payment_date': payment.payment_date,
+                    'key': settings.PAYSTACK_PUBLIC_KEY,
+                    'id': id,
+                }
     return render(request, "student/pay_fees.html")
-
-
 
 
 def tuition_receipt(request):

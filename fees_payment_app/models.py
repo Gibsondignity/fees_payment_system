@@ -53,8 +53,9 @@ class Semester(models.Model):
 
 
 class Fee(models.Model):
-    course = models.ForeignKey(Course, on_delete=models.CASCADE)
-    semester = models.ForeignKey(Semester, on_delete=models.CASCADE)
+    student = models.ForeignKey(Student, on_delete=models.CASCADE, blank=True,null=True)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, blank=True,null=True)
+    semester = models.ForeignKey(Semester, on_delete=models.CASCADE, blank=True,null=True)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     
     def __str__(self):
@@ -65,14 +66,13 @@ class Fee(models.Model):
 
 
 class Payment(models.Model):
-    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    student = models.ForeignKey(Student, on_delete=models.CASCADE, blank=True,null=True)
     fee = models.ForeignKey(Fee, on_delete=models.CASCADE)
     amount_paid = models.DecimalField(max_digits=10, decimal_places=2)
     payment_date = models.DateTimeField(auto_now_add=True)
     transaction_id = models.CharField(max_length=50, unique=True)
-    payment_method = models.CharField(max_length=50)  # e.g., 'Credit Card', 'Mobile Money', etc.
-    
-    ref = models.CharField(max_length=50,blank=True,null=True)
+    payment_method = models.CharField(max_length=50, blank=True,null=True)  # e.g., 'Credit Card', 'Mobile Money', etc.
+    ref = models.CharField(max_length=50, blank=True,null=True)
     verify = models.BooleanField(default=False)
     status = models.CharField(max_length=20, null=True, blank=True, default='pending')
     date_created = models.DateTimeField(auto_now_add=True, null=True)

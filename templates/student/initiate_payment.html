@@ -16,7 +16,7 @@
             </div>
             <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                    <li class="breadcrumb-item"><a href="#">Home</a></li>
                     <li class="breadcrumb-item active"><a href="javascript:void(0);">Fees</a></li>
                     <li class="breadcrumb-item active"><a href="javascript:void(0);">Initiate Payment</a></li>
                 </ol>
@@ -31,17 +31,24 @@
                     </div>
                     <div class="card-body">
                         <div class="basic-form">
-                            <form>
+                            <form method="POST" action="{% url 'make_payment' %}">
                                 <div class="form-group">
-                                    <input class="form-control" type="text" placeholder="Readonly input here…" readonly="">
-                                </div>
-                                <div class="form-group row">
                                     <label class="col-sm-3 col-form-label">Amount</label>
+                                    <input class="form-control" type="text" placeholder="1900" Required>
+                                </div> 
+                                <br>
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">Select Fees</label>
                                     <div class="col-sm-9">
-                                        <input type="number" class="form-control-plaintext" value="">
+                                        <select class="form-control default-select" Required>
+                                            {% for fee in fees %}
+                                                <option value="{{ fee.id }}">{{ fee.name }}</option>
+                                            {% endfor %}
+                                        </select>
                                     </div>
                                 </div>
-                                <button type="submit" class="btn btn-primary mb-2">Confirm identity</button>
+                                <br><br><center>
+                                <button type="submit" class="btn btn-primary mb-2">Initiate Payment</button></center>
                             </form>
                         </div>
                     </div>
