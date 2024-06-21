@@ -38,10 +38,10 @@ urlpatterns = [
     path('students/<int:pk>/edit/', views.student_update, name='student_update'),
     path('students/<int:pk>/delete/', views.student_delete, name='student_delete'),
     
-    path('fees_collection', views.fees_collection, name='fees_collection'),
+    path('tuition', views.student_tuition, name='student_tuition'),
     path('pay-fees', views.pay_fees, name='pay_fees'),
-    path('fees_receipt', views.fees_receipt, name='fees_receipt'),
-    path('profile', views.profile, name='profile'),
+    path('tuition-receipt', views.tuition_receipt, name='tuition_receipt'),
+    path('student-info', views.student_info, name='student_info'),
 
 
     # Course URLs

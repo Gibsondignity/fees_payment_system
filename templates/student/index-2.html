@@ -1,0 +1,104 @@
+﻿{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	
+	<meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Edumin - Bootstrap Admin Dashboard </title>
+    <!-- Favicon icon -->
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'dashboard/images/favicon.png' %}">
+	<link rel="stylesheet" href="{% static 'dashboard/vendor/bootstrap-select/dist/css/bootstrap-select.min.css' %}">
+    <link rel="stylesheet" href="{% static 'dashboard/css/style.css' %}">
+	<link rel="stylesheet" href="{% static 'dashboard/css/skin.css' %}">
+</head>
+<body>
+
+    <!--*******************
+        Preloader start
+    ********************-->
+    
+    <!--*******************
+        Preloader end
+    ********************-->
+
+    <!--**********************************
+        Main wrapper start
+    ***********************************-->
+    <div id="main-wrapper">
+
+        <!--**********************************
+            Nav header start
+        ***********************************-->
+        {% include "student/nav.html" %}
+        <!--**********************************
+            Nav header end
+        ***********************************-->
+
+        <!--**********************************
+            Header start
+        ***********************************-->
+
+        {% include "student/header.html" %}
+        <!--**********************************
+            Header end ti-comment-alt
+        ***********************************-->
+
+        <!--**********************************
+            Sidebar start
+        ***********************************-->
+        {% include "student/sidebar.html" %}
+        <!--**********************************
+            Sidebar end
+        ***********************************-->
+		
+        <!--**********************************
+            Content body start
+        ***********************************-->
+        {% block content %}
+
+        {% endblock content %}
+        <!--**********************************
+            Content body end
+        ***********************************-->
+
+
+        <!--**********************************
+            Footer start
+        ***********************************-->
+        {% include "student/footer.html" %}
+        <!--**********************************
+            Footer end
+        ***********************************-->
+
+		<!--**********************************
+           Support ticket button start
+        ***********************************-->
+
+        <!--**********************************
+           Support ticket button end
+        ***********************************-->
+
+
+    </div>
+    <!--**********************************
+        Main wrapper end
+    ***********************************-->
+    {% block script %}
+    {% endblock script %}
+    <!--**********************************
+        Scripts
+    
+    ***********************************-->
+    <!-- Required vendors -->
+    {% include "student/script.html" %}
+    
+    
+
+		
+	
+</body>
+</html>

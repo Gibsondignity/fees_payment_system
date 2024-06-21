@@ -61,10 +61,10 @@ def student_list(request):
 
 
 
-def fees_collection(request):
+def student_tuition(request):
     
     
-    return render(request, "student/fees-collection.html")
+    return render(request, "student/student_tuition.html")
 
 
 def pay_fees(request):
@@ -75,18 +75,18 @@ def pay_fees(request):
 
 
 
-def fees_receipt(request):
+def tuition_receipt(request):
     
     
-    return render(request, "student/fees-receipt.html")
+    return render(request, "student/tuition_receipt.html")
 
 
 
 
-def profile(request):
+def student_info(request):
     
     
-    return render(request, "student/profile.html")
+    return render(request, "student/student-info.html")
 
 
 
