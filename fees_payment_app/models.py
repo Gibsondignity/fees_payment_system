@@ -1,8 +1,11 @@
+import secrets
 from django.db import models
-
+from .paystack import PayStack
 # Create your models here.
 from django.db import models
 from django.contrib.auth.models import User
+
+
 
 class Student(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -18,6 +21,8 @@ class Student(models.Model):
         return f"{self.full_name} ({self.student_id})"
 
 
+
+
 class Course(models.Model):
     course_code = models.CharField(max_length=10, unique=True)
     course_name = models.CharField(max_length=100)
@@ -25,6 +30,8 @@ class Course(models.Model):
     
     def __str__(self):
         return self.course_name
+
+
 
 
 class Semester(models.Model):
@@ -43,6 +50,8 @@ class Semester(models.Model):
         return self.name
 
 
+
+
 class Fee(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
     semester = models.ForeignKey(Semester, on_delete=models.CASCADE)
@@ -50,6 +59,9 @@ class Fee(models.Model):
     
     def __str__(self):
         return f"{self.course.course_name} - {self.semester.name}: {self.amount}"
+
+
+
 
 
 class Payment(models.Model):
@@ -60,8 +72,41 @@ class Payment(models.Model):
     transaction_id = models.CharField(max_length=50, unique=True)
     payment_method = models.CharField(max_length=50)  # e.g., 'Credit Card', 'Mobile Money', etc.
     
+    ref = models.CharField(max_length=50,blank=True,null=True)
+    verify = models.BooleanField(default=False)
+    status = models.CharField(max_length=20, null=True, blank=True, default='pending')
+    date_created = models.DateTimeField(auto_now_add=True, null=True)
+    
     def __str__(self):
         return f"Payment by {self.student.full_name} on {self.payment_date}"
+    
+    def verify_payment(self):
+        payment = PayStack()
+        status, result = payment.verify_payment(self.ref)
+        if status:
+            self.status = status
+            if result['amount'] == 100*self.amount_paid:
+                self.verify = True
+            self.save()
+
+        if self.verify:
+            return True
+        return False
+    
+    
+    def save(self, *args, **kwargs):
+        if not self.ref:
+            while not self.ref:
+                ref = secrets.token_urlsafe(20)
+                object_with_similar_ref = Payment.objects.filter(ref=ref)
+                if not object_with_similar_ref:
+                    self.ref = ref
+
+
+        super().save(*args, **kwargs)
+
+
+
 
 
 class Receipt(models.Model):
@@ -71,3 +116,12 @@ class Receipt(models.Model):
     
     def __str__(self):
         return f"Receipt {self.receipt_number} for {self.payment.student.full_name}"
+
+
+
+
+
+
+    
+        
+    

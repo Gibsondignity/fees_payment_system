@@ -1,4 +1,5 @@
 # Create your views here.
+from django.conf import settings
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse
 from django.urls import reverse
@@ -68,8 +69,18 @@ def student_tuition(request):
 
 
 def pay_fees(request):
-    
-    
+    if request.method == "POST":
+        amount = request.POST['amount']
+        payment = Payment
+        user = request.user
+        student = Student.objects.filter(user=user).first()
+        context = {'ref': payment.ref,
+                    'amount': float(payment.amount),
+                        'email': student,
+                        'payment_date': payment.payment_date,
+                        'key': settings.PAYSTACK_PUBLIC_KEY,
+                        'id': id,
+                   }
     return render(request, "student/pay_fees.html")
 
 
@@ -90,6 +101,29 @@ def student_info(request):
 
 
 
+
+# def make_payment(request, id: int, ref: str) -> HttpResponse:
+    
+
+#     return render(request, 'make_payment.html', context)
+
+
+
+
+
+def verify_payment(request, ref: str) -> HttpResponse:
+    payment = get_object_or_404(Payment, ref=ref)
+
+    verified = payment.verify_payment()
+
+    if verified:
+        return HttpResponse('Payment was successful.')
+    else:
+        return HttpResponse('Payment was not successful.')
+    
+    
+    
+    
 
 
 def student_detail(request, pk):
@@ -481,3 +515,8 @@ def get_next_semester(current_semester):
     current_index = semesters.index(current_semester)
     next_index = (current_index + 1) % len(semesters)  # Wrap around to the first semester if needed
     return semesters[next_index]
+
+
+
+
+

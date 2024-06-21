@@ -11,14 +11,14 @@
         <div class="row page-titles mx-0">
             <div class="col-sm-6 p-md-0">
                 <div class="welcome-text">
-                    <h4>Fees Collection</h4>
+                    <h4>Add Fees Payment</h4>
                 </div>
             </div>
             <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="index.html">Home</a></li>
                     <li class="breadcrumb-item active"><a href="javascript:void(0);">Fees</a></li>
-                    <li class="breadcrumb-item active"><a href="javascript:void(0);">Fees Collection</a></li>
+                    <li class="breadcrumb-item active"><a href="javascript:void(0);">Make Payment</a></li>
                 </ol>
             </div>
         </div>
@@ -27,47 +27,21 @@
             <div class="col-lg-12">
                 <div class="card">
                     <div class="card-header">
-                        <h4 class="card-title">Fees Collection</h4>
+                        <h4 class="card-title">Fees Payment</h4>
                     </div>
                     <div class="card-body">
-                        <div class="table-responsive">
-                            <table id="example4" class="display" style="min-width: 845px">
-                                <thead>
-                                    <tr>
-                                        <th>Roll No</th>
-                                        <th>Student Name</th>
-                                        <th>Invoice number</th>
-                                        <th>Fees Type </th>
-                                        <th>Payment Type </th>
-                                        <th>Status </th>
-                                        <th>Date</th>
-                                        <th>Amount</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>01</td>
-                                        <td>Tiger Nixon</td>
-                                        <td>#54605</td>
-                                        <td>Library</td>
-                                        <td>Cash</td>
-                                        <td><span class="badge badge-success">Paid</span></td>
-                                        <td>2011/04/25</td>
-                                        <td><strong>120$</strong></td>
-                                    </tr>
-                                    <tr>
-                                        <td>02</td>
-                                        <td>Garrett Winters</td>
-                                        <td>#54687</td>
-                                        <td>Library</td>
-                                        <td>Credit Card</td>
-                                        <td><span class="badge badge-warning">Panding</span></td>
-                                        <td>2011/07/25</td>
-                                        <td><strong>120$</strong></td>
-                                    </tr>
-                                    
-                                </tbody>
-                            </table>
+                        <
+                        <div class="col-xs-4 col-sm-4 col-md-4">
+                            <div class="receipt-left">
+                             <div class="row justify-content-center mt-4">
+                                 <div class="col-lg-8 mx-auto mbr-form" data-form-type="formoid">
+                                     <div class="form-submit">
+                                         <script src="https://js.paystack.co/v1/inline.js"></script>
+                                         <button type="submit" class="btn btn-primary" onclick="payWithPaystack()"> Make Payment </button>
+                                     </div>
+                                 </div>
+                             </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -77,4 +51,45 @@
 </div>
 
 
+
+
+
 {% endblock content %}
+
+
+{% block script %}
+
+<script src="https://code.jquery.com/jquery-3.7.1.slim.js" ></script>
+
+    
+    <script>
+
+            function payWithPaystack(){
+            let currency = 'GHS';
+            let plan = "";
+            let ref = '{{ ref }}';
+            
+            let obj = {
+            key: '{{key}}', 
+            email: '{{email}}',
+            amount: {{TotalTaxInclusiveValue}}*100,
+            ref: ref,
+
+        callback: function(response){
+            window.location.href = "{% url 'verify_payment' ref %}";
+            }
+
+        }
+        if (Boolean(currency)){
+            obj.currency = currency.toUpperCase()
+        }
+        if (Boolean(plan)){
+            obj.plan = plan;
+        }
+
+        var handler = PaystackPop.setup(obj); 
+        handler.openIframe();
+    }
+    </script>
+
+{% endblock script %}

@@ -79,6 +79,10 @@ urlpatterns = [
     path('receipts/<int:pk>/edit/', views.receipt_update, name='receipt_update'),
     path('receipts/<int:pk>/delete/', views.receipt_delete, name='receipt_delete'),
 
+
+    path('<str:ref>/', views.verify_payment, name='verify_payment'),  
+    path('<int:id>/<str:ref>', views.make_payment, name='make_payment'),  
+    
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
