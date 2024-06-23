@@ -32,17 +32,18 @@
                     <div class="card-body">
                         <div class="basic-form">
                             <form method="POST" action="{% url 'make_payment' %}">
+                                {% csrf_token %}
                                 <div class="form-group">
                                     <label class="col-sm-3 col-form-label">Amount</label>
-                                    <input class="form-control" type="text" placeholder="1900" Required>
+                                    <input class="form-control" type="text" placeholder="1900" name="amount" id="amount" Required>
                                 </div> 
                                 <br>
                                 <div class="form-group row">
                                     <label class="col-sm-3 col-form-label">Select Fees</label>
                                     <div class="col-sm-9">
-                                        <select class="form-control default-select" Required>
+                                        <select class="form-control default-select" name="fees" id="fees" Required>
                                             {% for fee in fees %}
-                                                <option value="{{ fee.id }}">{{ fee.name }}</option>
+                                                <option value="{{ fee.id }}">{{ fee }}</option>
                                             {% endfor %}
                                         </select>
                                     </div>

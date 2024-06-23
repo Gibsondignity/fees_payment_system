@@ -1,21 +1,68 @@
-import secrets
-from django.db import models
-from .paystack import PayStack
-# Create your models here.
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils import timezone
+import secrets
 
 
+from fees_payment_app.paystack import PayStack
+
+class Academic_Year(models.Model):
+    year = models.CharField(max_length=10)
+    date_created = models.DateField(auto_now=True)
+    date_updated = models.DateField(auto_now_add=True)
+
+    def __str__(self):
+        return self.year
+
+class Faculty(models.Model):
+    name = models.CharField(max_length=100)
+    date_created = models.DateField(auto_now=True)
+    date_updated = models.DateField(auto_now_add=True)
+    
+    def __str__(self):
+        return self.name
+
+class StudentCategory(models.Model):
+    category_name = models.CharField(max_length=50)  # e.g., Freshmen, Top-up, Continuing
+    description = models.TextField(blank=True, null=True)
+    date_created = models.DateField(auto_now=True)
+    date_updated = models.DateField(auto_now_add=True)
+    
+    def __str__(self):
+        return self.category_name
 
 class Student(models.Model):
+    level_choices = (
+        ('Level 100', 'Level 100'), 
+        ('Level 200', 'Level 200'), 
+        ('Level 300', 'Level 300'), 
+        ('Level 400', 'Level 400')
+    )
+    nationality_choices = (
+        ('Ghanaian', 'Ghanaian'), 
+        ('International Student', 'International Student')
+    )
+    category_choices = (
+        ('Freshmen', 'Freshmen'), 
+        ('Top-up', 'Top-up'), 
+        ('Continuing', 'Continuing')
+    )
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     student_id = models.CharField(max_length=20, unique=True)
-    full_name = models.CharField(max_length=100)
+    full_name = models.CharField(max_length=100, null=True, blank=True)
     email = models.EmailField(unique=True)
-    date_of_birth = models.DateField()
-    address = models.CharField(max_length=255)
-    phone_number = models.CharField(max_length=15)
-    enrollment_date = models.DateField()
+    date_of_birth = models.DateField(null=True)
+    address = models.CharField(max_length=255, null=True, blank=True)
+    phone_number = models.CharField(max_length=15, null=True, blank=True)
+    enrollment_date = models.DateField(null=True)
+    completion_date = models.DateField(null=True)
+    facaulty = models.ForeignKey(Faculty, on_delete=models.CASCADE, null=True, blank=True)
+    entry_level = models.CharField(max_length=255, choices=level_choices, null=True)
+    current_level = models.CharField(max_length=255, choices=level_choices, null=True)
+    nationality = models.CharField(max_length=255, choices=nationality_choices, null=True)
+    student_category = models.CharField(max_length=255, choices=category_choices, null=True)
+    date_created = models.DateField(auto_now=True, null=True)
+    date_updated = models.DateField(auto_now_add=True, null=True)
     
     def __str__(self):
         return f"{self.full_name} ({self.student_id})"
@@ -23,55 +70,45 @@ class Student(models.Model):
 
 
 
-class Course(models.Model):
-    course_code = models.CharField(max_length=10, unique=True)
-    course_name = models.CharField(max_length=100)
-    course_description = models.TextField()
-    
-    def __str__(self):
-        return self.course_name
-
-
-
-
-class Semester(models.Model):
-    SEMESTER_CHOICES = [
-        ('Spring', 'Spring'),
-        ('Summer', 'Summer'),
-        ('Fall', 'Fall'),
-        ('Winter', 'Winter'),
-    ]
-    
-    name = models.CharField(max_length=20, choices=SEMESTER_CHOICES)
-    start_date = models.DateField()
-    end_date = models.DateField()
-    
-    def __str__(self):
-        return self.name
-
-
-
-
 class Fee(models.Model):
-    student = models.ForeignKey(Student, on_delete=models.CASCADE, blank=True,null=True)
-    course = models.ForeignKey(Course, on_delete=models.CASCADE, blank=True,null=True)
-    semester = models.ForeignKey(Semester, on_delete=models.CASCADE, blank=True,null=True)
-    amount = models.DecimalField(max_digits=10, decimal_places=2)
+
+    level_choices = (
+        ('Level 100', 'Level 100'), 
+        ('Level 200', 'Level 200'), 
+        ('Level 300', 'Level 300'), 
+        ('Level 400', 'Level 400')
+    )
+    category_choices = (
+        ('Freshmen', 'Freshmen'), 
+        ('Top-up', 'Top-up'), 
+        ('Continuing', 'Continuing')
+    )
+    percentage_choices = (
+        ('100%', '100%'), 
+        ('50%', '50%')
+    )
+    facaulty = models.ForeignKey(Faculty, on_delete=models.CASCADE, null=True)
+    academic_year = models.ForeignKey(Academic_Year, on_delete=models.CASCADE, null=True)
+    level = models.CharField(max_length=255, choices=level_choices, null=True)
+    student_category = models.CharField(max_length=255, choices=category_choices, null=True)
+    percentage = models.CharField(max_length=10, choices=percentage_choices, default='100%')
+    tuition_amount = models.DecimalField(max_digits=10, decimal_places=2, null=True)
+    other_charges = models.DecimalField(max_digits=10, decimal_places=2, null=True)
+    date_created = models.DateField(auto_now=True, null=True)
+    date_updated = models.DateField(auto_now_add=True, null=True)
     
     def __str__(self):
-        return f"{self.course.course_name} - {self.semester.name}: {self.amount}"
-
-
+        return f"{self.facaulty.name} - {self.academic_year}: {self.tuition_amount}"
 
 
 
 class Payment(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE, blank=True,null=True)
-    fee = models.ForeignKey(Fee, on_delete=models.CASCADE)
-    amount_paid = models.DecimalField(max_digits=10, decimal_places=2)
-    payment_date = models.DateTimeField(auto_now_add=True)
-    transaction_id = models.CharField(max_length=50, unique=True)
-    payment_method = models.CharField(max_length=50, blank=True,null=True)  # e.g., 'Credit Card', 'Mobile Money', etc.
+    fee = models.ForeignKey(Fee, on_delete=models.CASCADE, null=True)
+    amount_paid = models.DecimalField(max_digits=10, decimal_places=2, null=True)
+    payment_date = models.DateTimeField(auto_now_add=True, null=True)
+    transaction_id = models.CharField(max_length=50, unique=True, null=True)
+    payment_method = models.CharField(max_length=50, blank=True,null=True)  
     ref = models.CharField(max_length=50, blank=True,null=True)
     verify = models.BooleanField(default=False)
     status = models.CharField(max_length=20, null=True, blank=True, default='pending')
@@ -107,12 +144,10 @@ class Payment(models.Model):
 
 
 
-
-
 class Receipt(models.Model):
     payment = models.OneToOneField(Payment, on_delete=models.CASCADE)
-    receipt_number = models.CharField(max_length=50, unique=True)
-    issue_date = models.DateTimeField(auto_now_add=True)
+    receipt_number = models.CharField(max_length=50, unique=True, null=True)
+    issue_date = models.DateTimeField(auto_now_add=True, null=True)
     
     def __str__(self):
         return f"Receipt {self.receipt_number} for {self.payment.student.full_name}"

@@ -1,19 +1,9 @@
 from django import forms
-from .models import Student, Course, Semester, Fee, Payment, Receipt
+from .models import Student, Fee, Payment, Receipt
 
 class StudentForm(forms.ModelForm):
     class Meta:
         model = Student
-        fields = '__all__'
-
-class CourseForm(forms.ModelForm):
-    class Meta:
-        model = Course
-        fields = '__all__'
-
-class SemesterForm(forms.ModelForm):
-    class Meta:
-        model = Semester
         fields = '__all__'
 
 class FeeForm(forms.ModelForm):
