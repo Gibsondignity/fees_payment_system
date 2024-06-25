@@ -6,7 +6,7 @@ from django.urls import reverse
 from .models import Student, Fee, Payment, Receipt
 from .forms import StudentForm, FeeForm, PaymentForm, ReceiptForm
 from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
@@ -38,6 +38,30 @@ def custom_login(request):
         return redirect(reverse('student_dashboard'))
     return render(request, 'login.html')
 
+
+def logout_user(request):
+    logout(request.user)
+    return redirect(reverse('login'))
+
+def reset_password(request):
+    if request.method == "POST":
+        current_password = request.POST['current_password']
+        new_password1 = request.POST.get('new_password1')
+        new_password2 = request.POST.get('new_password2')
+        
+        print(current_password, new_password1, new_password2)
+        user = authenticate(request, username=current_password, password=current_password)
+        if user is not None:
+            if new_password1 == new_password2:
+                request.user.set_password(new_password1)
+                request.user.save()
+                return redirect(reverse('login'))
+            else:
+                messages.error(request, "Passwords do not match.")
+        else:
+            messages.error(request, "Invalid current password.")
+
+    return redirect(reverse('student_info'))
 
 
 
@@ -103,6 +127,15 @@ def student_fee_history(request, student_id):
 
 
 
+def student_info(request):
+    
+    student = Student.objects.filter(user=request.user).first()
+    
+    return render(request, "student/student-info.html", {'student': student})
+
+
+# Payment Views
+
 def make_payment(request):
     amount = request.POST['amount']
     fee = request.POST['fees']
@@ -125,16 +158,6 @@ def make_payment(request):
 
 
 
-
-
-
-def student_info(request):
-    
-    
-    return render(request, "student/student-info.html")
-
-
-
 def verify_payment(request, ref: str) -> HttpResponse:
     payment = get_object_or_404(Payment, ref=ref)
 
@@ -153,6 +176,15 @@ def payment_receipt(request):
     return render(request, 'student/payment_receipt.html')   
    
    
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
  
 
 def student_create(request):

@@ -29,6 +29,8 @@ urlpatterns = [
     
     path('', views.index, name='index'),
     path('login/', views.custom_login, name='login'),
+    path('reset_password/', views.reset_password, name='reset_password'),
+    path('logout_user/', views.logout_user, name='logout_user'),
     
     # Student URLs
     path('dashboard', views.student_dashboard, name='student_dashboard'),
