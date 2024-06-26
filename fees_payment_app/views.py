@@ -164,7 +164,6 @@ def make_payment(request):
         payment.amount_paid = amount
         payment.student = student
         payment.fee = fees
-        payment.payment_date = timezone.now()
         payment.save()
         
         
@@ -172,13 +171,13 @@ def make_payment(request):
         
         payment.save()
 
-    # context = {'ref': payment.ref,
-    #             'amount': payment.amount),
-    #                 'email': student,
-    #                 'payment_date': payment.payment_date,
-    #                 'key': settings.PAYSTACK_PUBLIC_KEY,
-    #                 'id': id,
-    #             }
+    context = {     'ref': payment.ref,
+                    'amount': payment.amount,
+                    'email': student,
+                    'payment_date': payment.payment_date,
+                    'key': settings.PAYSTACK_PUBLIC_KEY,
+                    'id': id,
+            }
     
     context = {'fees': fees}
     return render(request, "student/pay_fees.html", context)

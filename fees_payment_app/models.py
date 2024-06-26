@@ -6,13 +6,17 @@ import secrets
 
 from fees_payment_app.paystack import PayStack
 
+import datetime
+
 class Academic_Year(models.Model):
-    year = models.CharField(max_length=10)
+    YEARS = [(r, r) for r in range(datetime.datetime.now().year, 2020, -1)]
+    year = models.CharField(max_length=4, choices=YEARS)
     date_created = models.DateField(auto_now=True)
     date_updated = models.DateField(auto_now_add=True)
 
     def __str__(self):
-        return self.year
+        return self.get_year_display()
+    
 
 class Faculty(models.Model):
     name = models.CharField(max_length=100)
@@ -22,6 +26,8 @@ class Faculty(models.Model):
     def __str__(self):
         return self.name
 
+
+
 class StudentCategory(models.Model):
     category_name = models.CharField(max_length=50)  # e.g., Freshmen, Top-up, Continuing
     description = models.TextField(blank=True, null=True)
@@ -30,6 +36,8 @@ class StudentCategory(models.Model):
     
     def __str__(self):
         return self.category_name
+
+
 
 class Student(models.Model):
     level_choices = (
@@ -70,6 +78,17 @@ class Student(models.Model):
 
 
 
+class Student_Areas(models.Model):
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    amount = models.DecimalField(max_digits=5, decimal_places=2, default=0)
+    other_charges = models.DecimalField(max_digits=5, decimal_places=2, default=0)
+    date_created = models.DateField(auto_now=True, null=True)
+    date_updated = models.DateField(auto_now_add=True, null=True)
+    
+    def __str__(self):
+        return str(self.student, self.amount)
+    
+    
 class Fee(models.Model):
 
     level_choices = (
