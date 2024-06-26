@@ -87,18 +87,32 @@ class Fee(models.Model):
         ('100%', '100%'), 
         ('50%', '50%')
     )
+    nationality_choices = (
+        ('Ghanaian', 'Ghanaian'), 
+        ('International Student', 'International Student')
+    )
     facaulty = models.ForeignKey(Faculty, on_delete=models.CASCADE, null=True)
     academic_year = models.ForeignKey(Academic_Year, on_delete=models.CASCADE, null=True)
+    student = models.ForeignKey(Student, on_delete=models.CASCADE, null=True)
     level = models.CharField(max_length=255, choices=level_choices, null=True)
     student_category = models.CharField(max_length=255, choices=category_choices, null=True)
     percentage = models.CharField(max_length=10, choices=percentage_choices, default='100%')
     tuition_amount = models.DecimalField(max_digits=10, decimal_places=2, null=True)
     other_charges = models.DecimalField(max_digits=10, decimal_places=2, null=True)
+    total_fees = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    nationality = models.CharField(max_length=255, choices=nationality_choices, null=True)
     date_created = models.DateField(auto_now=True, null=True)
     date_updated = models.DateField(auto_now_add=True, null=True)
     
+    def add_total_fees(self):
+        self.total_fees = self.tuition_amount + self.other_charges
+        
+    def save(self, *args, **kwargs):
+        self.add_total_fees()
+        super().save(*args, **kwargs)
+    
     def __str__(self):
-        return f"{self.facaulty.name} - {self.academic_year}: {self.tuition_amount}"
+        return f"{self.facaulty.name} | {self.academic_year} Acd. Year | Fee: {self.total_fees}"
 
 
 

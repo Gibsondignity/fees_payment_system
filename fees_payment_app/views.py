@@ -69,29 +69,35 @@ def reset_password(request):
 def student_dashboard(request):
     user = request.user
     student = get_object_or_404(Student, user=user)
-    fees = Fee.objects.filter(facaulty=student.facaulty, level=student.current_level, student_category=student.student_category)
+    fees = Fee.objects.filter(facaulty=student.facaulty, level=student.current_level, nationality=student.nationality)
     payments = Payment.objects.filter(student=student)
+    payment_count = Payment.objects.filter(student=student).count()
 
-    total_fees = fees.aggregate(Sum('tuition_amount'))['tuition_amount__sum'] or 0
+    total_fees = fees.aggregate(Sum('total_fees'))['total_fees__sum'] or 0
     total_payments = payments.aggregate(Sum('amount_paid'))['amount_paid__sum'] or 0
     arrears = total_fees - total_payments
 
     context = {
-        'student': student,
         'fees': fees,
         'payments': payments,
         'total_fees': total_fees,
         'total_payments': total_payments,
-        'arrears': arrears
+        'arrears': arrears,
+        'payment_count': payment_count
     }
-    return render(request, 'student/dashboard.html')
+    return render(request, 'student/dashboard.html', context)
 
 
 
 def student_tuition(request):
     
+    user = request.user
+    student = get_object_or_404(Student, user=user)
+    fees = Fee.objects.filter(facaulty=student.facaulty, level=student.current_level, student_category=student.student_category)
+
+    context = {'student':student, 'fees':fees}
     
-    return render(request, "student/student_tuition.html")
+    return render(request, "student/student_tuition.html", context)
 
 
 def pay_fees(request):
@@ -137,14 +143,35 @@ def student_info(request):
 # Payment Views
 
 def make_payment(request):
-    amount = request.POST['amount']
-    fee = request.POST['fees']
-    
-    fees = Fee.objects.filter(id=fee).first()
-    
-    print(fees.tuition_amount, fees.other_charges)
-    payment = Payment()
-    
+    if request.method == "POST":
+        percentage = request.POST.get('percentage')
+        fees = request.POST.get('fees')
+        student = request.user.student
+        amount = float(fees) * float(percentage) / 100
+
+        previous_payment = Payment.objects.filter(fees, student=student)
+        
+        if previous_payment:
+            amount = float(fees) - previous_payment
+            
+            if amount > 0:
+                amount = amount
+            else:
+                messages.warning(request, 'Full payment has been done with this fees')
+                return redirect(reverse('pay_fees'))
+            
+        payment = Payment()
+        payment.amount_paid = amount
+        payment.student = student
+        payment.fee = fees
+        payment.payment_date = timezone.now()
+        payment.save()
+        
+        
+        payment = Payment()
+        
+        payment.save()
+
     # context = {'ref': payment.ref,
     #             'amount': payment.amount),
     #                 'email': student,

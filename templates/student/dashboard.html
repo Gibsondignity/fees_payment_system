@@ -18,7 +18,7 @@
                             </span>
                             <div class="media-body text-white">
                                 <p class="mb-1">Total Payments</p>
-                                <h3 class="text-white">3280</h3>
+                                <h3 class="text-white">{{total_payments}}</h3>
                                 <div class="progress mb-2 bg-white">
                                     <div class="progress-bar progress-animated bg-light" style="width: 80%"></div>
                                 </div>
@@ -36,8 +36,8 @@
                                 GH₵
                             </span>
                             <div class="media-body text-white">
-                                <p class="mb-1">Arrears</p>
-                                <h3 class="text-white">245</h3>
+                                <p class="mb-1">Total Fees</p>
+                                <h3 class="text-white">{{total_fees}}</h3>
                                 <div class="progress mb-2 bg-white">
                                     <div class="progress-bar progress-animated bg-light" style="width: 50%"></div>
                                 </div>
@@ -55,8 +55,8 @@
                                 GH₵
                             </span>
                             <div class="media-body text-white">
-                                <p class="mb-1">Balance</p>
-                                <h3 class="text-white">28</h3>
+                                <p class="mb-1">Arrears</p>
+                                <h3 class="text-white">{{arrears}}</h3>
                                 <div class="progress mb-2 bg-white">
                                     <div class="progress-bar progress-animated bg-light" style="width: 76%"></div>
                                 </div>
@@ -75,7 +75,7 @@
                             </span> {% endcomment %}
                             <div class="media-body text-white">
                                 <p class="mb-1">Number of Payment</p>
-                                <h3 class="text-white">3</h3>
+                                <h3 class="text-white">{{payment_count}}</h3>
                                 <div class="progress mb-2 bg-white">
                                     <div class="progress-bar progress-animated bg-light" style="width: 30%"></div>
                                 </div>
@@ -107,16 +107,19 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    {% for payment in payments %}
                                     <tr>
-                                        <td>01</td>
-                                        <td>Second Semester</td>
-                                        <td>200</td>
-                                        <td>20 June, 2024</td>
-                                        <td><span class="badge badge-rounded badge-primary">Checkin</span></td>
-                                        <td>120</td>
+                                        <td>{{payment.id}}</td>
+                                        <td>{{payment.semester}}</td>
+                                        <td>{{payment.level}}</td>
+                                        <td>{{payment.date_of_payment}}</td>
+                                        <td>
+                                            <span class="badge badge-rounded {{payment.status|lower}}">{{payment.status}}</span>
+                                        </td>
+                                        <td>{{payment.fees}}</td>
                                         
                                     </tr>
-                                    
+                                    {% endfor %}
                                     
                                     
                                 </tbody>

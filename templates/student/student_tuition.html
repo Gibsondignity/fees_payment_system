@@ -36,21 +36,33 @@
                                 <thead>
                                     <tr>
                                         <th scope="col">No.</th>
-                                        <th scope="col">Semester</th>
-                                        <th scope="col">Year</th>
+                                        <th scope="col">Tuition Amount</th>
+                                        <th scope="col">Other Charges</th>
+                                        <th scope="col">Total Fees</th>
+                                        <th scope="col">Academic Year</th>
                                         <th scope="col">Date Of Issue</th>
-                                        <th scope="col">Status</th>
+                                        {% comment %} <th scope="col">Status</th> {% endcomment %}
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    
+                                    {% for fee in fees %}
                                     <tr>
-                                        <td>01</td>
-                                        <td>Jack Ronan</td>
-                                        <td>Airi Satou</td>
-                                        <td>01 August 2020</td>
-                                        <td><span class="badge badge-rounded badge-primary">Checkin</span></td>             
+                                        <td>{{ forloop.counter }}</td>
+                                        <td>{{ fee.tuition_amount }}</td>
+                                        <td>{{ fee.other_charges }}</td>
+                                        <td>{{ fee.total_fees }}</td>
+                                        <td>{{ fee.academic_year.year }}</td>
+                                        <td>{{ fee.date_created }}</td>
+                                        <td>
+                                            {% comment %} {% if fee.is_paid %}
+                                                <span class="badge badge-rounded badge-success">Paid</span>
+                                            {% else %}
+                                                <span class="badge badge-rounded badge-danger">Unpaid</span>
+                                            {% endif %} {% endcomment %}
+                                        </td>             
                                     </tr>
-
+                                    {% endfor %}
                                 </tbody>
                             </table>
                         </div>
