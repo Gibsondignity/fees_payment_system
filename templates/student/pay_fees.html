@@ -31,11 +31,14 @@
                     </div>
                     <div class="card-body text-center">
                         <div class="row">
-                            <div class="col-md-6">
-                                <p class="text-center">Tuition: {{fees.tuition_amount}}</p>
+                            <div class="col-md-4">
+                                <p class="text-center">Tuition: {{fee_instance.tuition_amount}}</p>
                             </div>
-                            <div class="col-md-6">
-                                <p class="text-center">Other Charges: {{fees.other_charges}}</p>
+                            <div class="col-md-4">
+                                <p class="text-center">Other Charges: {{fee_instance.other_charges}}</p>
+                            </div>
+                            <div class="col-md-4">
+                                <p class="text-center">Payment Amount: {{amount}}</p>
                             </div>
                         </div>
                         <div class="row justify-content-center">
@@ -76,11 +79,11 @@
             let obj = {
             key: '{{key}}', 
             email: '{{email}}',
-            amount: {{TotalTaxInclusiveValue}}*100,
+            amount: {{amount}}*100,
             ref: ref,
 
         callback: function(response){
-            window.location.href = "";
+            window.location.href = "#";
             }
 
         }

@@ -1,4 +1,5 @@
 # Create your views here.
+from decimal import Decimal
 from django.conf import settings
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse
@@ -147,39 +148,33 @@ def make_payment(request):
         percentage = request.POST.get('percentage')
         fees = request.POST.get('fees')
         student = request.user.student
-        amount = float(fees) * float(percentage) / 100
-
-        previous_payment = Payment.objects.filter(fees, student=student)
+        fee_instance = Fee.objects.filter(pk=fees).first()
+        amount = fee_instance.total_fees * Decimal(percentage) / 100
         
-        if previous_payment:
-            amount = float(fees) - previous_payment
-            
-            if amount > 0:
-                amount = amount
-            else:
-                messages.warning(request, 'Full payment has been done with this fees')
-                return redirect(reverse('pay_fees'))
-            
         payment = Payment()
         payment.amount_paid = amount
         payment.student = student
-        payment.fee = fees
+        payment.fee = fee_instance
         payment.save()
-        
-        
-        payment = Payment()
         
         payment.save()
 
-    context = {     'ref': payment.ref,
-                    'amount': payment.amount,
-                    'email': student,
+        context = {     
+                   'ref': payment.ref,
+                    'amount': payment.amount_paid,
+                    'email': request.user.student.email,
+                    'fee': payment.fee,
                     'payment_date': payment.payment_date,
                     'key': settings.PAYSTACK_PUBLIC_KEY,
                     'id': id,
+                    'amount': amount, 
+                    'fee_instance': fee_instance
             }
-    
-    context = {'fees': fees}
+        
+    else:
+        messages.error(request, "Method not allowed!")
+        return redirect(reverse('pay_fees'))
+    print(context)
     return render(request, "student/pay_fees.html", context)
 
 
