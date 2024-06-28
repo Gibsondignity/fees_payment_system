@@ -83,7 +83,7 @@
             ref: ref,
 
         callback: function(response){
-            window.location.href = "#";
+            window.location.href = "{% url 'verify_payment' ref %}";
             }
 
         }

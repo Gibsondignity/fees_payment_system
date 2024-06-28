@@ -4,7 +4,7 @@ from django.conf import settings
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse
 from django.urls import reverse
-from .models import Student, Fee, Payment, Receipt
+from .models import Student, Fee, Payment, Receipt, Student_Areas
 from .forms import StudentForm, FeeForm, PaymentForm, ReceiptForm
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
@@ -34,15 +34,24 @@ def custom_login(request):
             #     return redirect('/')
             return redirect(reverse('student_dashboard'))
         else:
-            messages.error(request, "Invalid username or password.")
+            messages.error(request, "Invalid ID or password.")
     if request.user.is_authenticated:
         return redirect(reverse('student_dashboard'))
     return render(request, 'login.html')
 
 
 def logout_user(request):
-    logout(request.user)
-    return redirect(reverse('login'))
+    """
+    Log out the user.
+
+    Args:
+        request (HttpRequest): The HTTP request object.
+
+    Returns:
+        HttpResponse: A redirect to the login page.
+    """
+    logout(request)
+    return redirect('login')
 
 def reset_password(request):
     if request.method == "POST":
@@ -71,12 +80,19 @@ def student_dashboard(request):
     user = request.user
     student = get_object_or_404(Student, user=user)
     fees = Fee.objects.filter(facaulty=student.facaulty, level=student.current_level, nationality=student.nationality)
-    payments = Payment.objects.filter(student=student)
-    payment_count = Payment.objects.filter(student=student).count()
+    payments = Payment.objects.filter(student=student, status=True)
+    payment_count = Payment.objects.filter(student=student, status=True).count()
 
     total_fees = fees.aggregate(Sum('total_fees'))['total_fees__sum'] or 0
     total_payments = payments.aggregate(Sum('amount_paid'))['amount_paid__sum'] or 0
-    arrears = total_fees - total_payments
+
+    arrears = 0
+    for fee in fees:
+        payment = payments.filter(fee=fee).first()
+        if payment:
+            arrears += fee.total_fees - payment.amount_paid
+        else:
+            arrears += fee.total_fees
 
     context = {
         'fees': fees,
@@ -90,15 +106,30 @@ def student_dashboard(request):
 
 
 
+
+
 def student_tuition(request):
     
     user = request.user
     student = get_object_or_404(Student, user=user)
     fees = Fee.objects.filter(facaulty=student.facaulty, level=student.current_level, student_category=student.student_category)
-
-    context = {'student':student, 'fees':fees}
+    
+    payments = Payment.objects.filter(student=student, status=True)
+    total_fees = fees.aggregate(Sum('total_fees'))['total_fees__sum'] or 0
+    total_payments = payments.aggregate(Sum('amount_paid'))['amount_paid__sum'] or 0
+    arrears = Decimal(0)
+    if total_payments < total_fees:
+        areas = Student_Areas.objects.filter(student=student)
+        fees = areas.filter(amount_paid__lt=('amount_owed')).union(fees)
+        for area in areas:
+            arrears += area.amount_owed - area.amount_paid
+    
+    context = {'student':student, 'fees':fees, 'arrears':arrears}
     
     return render(request, "student/student_tuition.html", context)
+
+
+
 
 
 def pay_fees(request):
@@ -185,9 +216,11 @@ def verify_payment(request, ref: str) -> HttpResponse:
     verified = payment.verify_payment()
 
     if verified:
-        return HttpResponse('Payment was successful.')
+        messages.success(request, 'Payment was successful.')
+        return redirect('student_dashboard')
     else:
-        return HttpResponse('Payment was not successful.')
+        messages.error(request, 'Payment was not successful.')
+        return redirect('student_dashboard')
     
     
    

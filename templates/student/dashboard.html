@@ -99,8 +99,7 @@
                                 <thead>
                                     <tr>
                                         <th scope="col">No.</th>
-                                        <th scope="col">Semester</th>
-                                        <th scope="col">Level</th>
+                                        <th scope="col">Amount</th>
                                         <th scope="col">Date Of Payment</th>
                                         <th scope="col">Status</th>
                                         <th scope="col">Fees</th>
@@ -110,13 +109,12 @@
                                     {% for payment in payments %}
                                     <tr>
                                         <td>{{payment.id}}</td>
-                                        <td>{{payment.semester}}</td>
-                                        <td>{{payment.level}}</td>
-                                        <td>{{payment.date_of_payment}}</td>
+                                        <td>{{payment.amount_paid}}</td>
+                                        <td>{{payment.date_created}}</td>
                                         <td>
                                             <span class="badge badge-rounded {{payment.status|lower}}">{{payment.status}}</span>
                                         </td>
-                                        <td>{{payment.fees}}</td>
+                                        <td>{{payment.fee}}</td>
                                         
                                     </tr>
                                     {% endfor %}
