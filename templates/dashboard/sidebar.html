@@ -1,0 +1,39 @@
+{% load static %}
+
+
+
+{% if request.user.is_superuser %}
+<div class="dlabnav">
+    <div class="dlabnav-scroll">
+        <ul class="metismenu" id="menu">
+            <li class="nav-label first">Main Menu</li>
+            <li><a class="has-arrow" href="{% url 'superuser_dashboard' %}" aria-expanded="false">
+                    <i class="la la-home"></i>
+                    <span class="nav-text">Dashboard</span>
+                </a>
+            </li>
+            
+
+            <li><a class="has-arrow" href="javascript:void()" aria-expanded="false">
+                    <i class="la la-dollar"></i>
+                    <span class="nav-text">Fees</span>
+                </a>
+                <ul aria-expanded="false">
+                    <li><a href="{% url 'student_tuition' %}">Fees Collection</a></li>
+                    <li><a href="{% url 'pay_fees' %}">Add Fees</a></li>
+                    <li><a href="{% url 'payment_receipt' %}">Payment Receipt</a></li>
+                </ul>
+            </li>					
+
+            <li><a class="has-arrow" href="{% url 'student_info' %}" aria-expanded="false">
+                    <i class="la la-users"></i>
+                    <span class="nav-text">Profile</span>
+                </a>
+                
+            </li>
+            
+            
+        </ul>
+    </div>
+</div>
+{% endif %}

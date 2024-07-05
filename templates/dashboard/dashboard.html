@@ -1,4 +1,4 @@
-{% extends "student/index-2.html" %}
+{% extends "dashboard/index-2.html" %}
 
 
 {% load static %}
@@ -37,7 +37,6 @@
                             </span>
                             <div class="media-body text-white">
                                 <p class="mb-1">Total Fees</p>
-                                <small>Current Year</small>
                                 <h3 class="text-white">{{total_fees}}</h3>
                                 <div class="progress mb-2 bg-white">
                                     <div class="progress-bar progress-animated bg-light" style="width: 50%"></div>
@@ -57,7 +56,6 @@
                             </span>
                             <div class="media-body text-white">
                                 <p class="mb-1">Arrears</p>
-                                <small>Previous Year(s)</small>
                                 <h3 class="text-white">{{arrears}}</h3>
                                 <div class="progress mb-2 bg-white">
                                     <div class="progress-bar progress-animated bg-light" style="width: 76%"></div>
@@ -87,6 +85,84 @@
                     </div>
                 </div>
             </div> 
+
+
+            <div class="col-xl-3 col-xxl-3 col-sm-6">
+                <div class="widget-stat card bg-primary">
+                    <div class="card-body">
+                        <div class="media">
+                            <span class="mr-3">
+                                GH₵
+                            </span>
+                            <div class="media-body text-white">
+                                <p class="mb-1">Total Payments</p>
+                                <h3 class="text-white">{{total_payments}}</h3>
+                                <div class="progress mb-2 bg-white">
+                                    <div class="progress-bar progress-animated bg-light" style="width: 80%"></div>
+                                </div>
+                                <small></small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-xxl-3 col-sm-6">
+                <div class="widget-stat card bg-warning">
+                    <div class="card-body">
+                        <div class="media">
+                            <span class="mr-3">
+                                GH₵
+                            </span>
+                            <div class="media-body text-white">
+                                <p class="mb-1">Total Fees</p>
+                                <h3 class="text-white">{{total_fees}}</h3>
+                                <div class="progress mb-2 bg-white">
+                                    <div class="progress-bar progress-animated bg-light" style="width: 50%"></div>
+                                </div>
+                                <small></small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-xxl-3 col-sm-6">
+                <div class="widget-stat card bg-secondary">
+                    <div class="card-body">
+                        <div class="media">
+                            <span class="mr-3">
+                                GH₵
+                            </span>
+                            <div class="media-body text-white">
+                                <p class="mb-1">Arrears</p>
+                                <h3 class="text-white">{{arrears}}</h3>
+                                <div class="progress mb-2 bg-white">
+                                    <div class="progress-bar progress-animated bg-light" style="width: 76%"></div>
+                                </div>
+                                <small></small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-xxl-3 col-sm-6">
+                <div class="widget-stat card bg-danger">
+                    <div class="card-body">
+                        <div class="media">
+                            {% comment %} <span class="mr-3">
+                                
+                            </span> {% endcomment %}
+                            <div class="media-body text-white">
+                                <p class="mb-1">Number of Payment</p>
+                                <h3 class="text-white">{{payment_count}}</h3>
+                                <div class="progress mb-2 bg-white">
+                                    <div class="progress-bar progress-animated bg-light" style="width: 30%"></div>
+                                </div>
+                                <small> Last Payment: </small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             
             
         

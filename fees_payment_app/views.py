@@ -28,10 +28,7 @@ def custom_login(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            # if user.is_superuser:
-            #     return redirect('/')
-            # else:
-            #     return redirect('/')
+
             return redirect(reverse('student_dashboard'))
         else:
             messages.error(request, "Invalid ID or password.")
@@ -39,7 +36,7 @@ def custom_login(request):
         return redirect(reverse('student_dashboard'))
     return render(request, 'login.html')
 
-
+@login_required
 def logout_user(request):
     """
     Log out the user.
@@ -52,7 +49,7 @@ def logout_user(request):
     """
     logout(request)
     return redirect('login')
-
+@login_required
 def reset_password(request):
     if request.method == "POST":
         current_password = request.POST['current_password']
@@ -76,6 +73,7 @@ def reset_password(request):
 
 
 # Student Views
+@login_required
 def student_dashboard(request):
     user = request.user
     student = get_object_or_404(Student, user=user)
@@ -107,7 +105,7 @@ def student_dashboard(request):
 
 
 
-
+@login_required
 def student_tuition(request):
     
     user = request.user
@@ -131,7 +129,7 @@ def student_tuition(request):
 
 
 
-
+@login_required
 def pay_fees(request):
     user = request.user
     student = get_object_or_404(Student, user=user)
@@ -142,7 +140,7 @@ def pay_fees(request):
     return render(request, "student/initiate_payment.html", context)
 
 
-
+@login_required
 def student_fee_history(request, student_id):
     student = get_object_or_404(Student, pk=student_id)
     fees = Fee.objects.filter(facaulty=student.facaulty, level=student.current_level, student_category=student.student_category)
@@ -164,7 +162,7 @@ def student_fee_history(request, student_id):
     return render(request, 'student_fee_history.html', context)
 
 
-
+@login_required
 def student_info(request):
     
     student = Student.objects.filter(user=request.user).first()
@@ -173,7 +171,7 @@ def student_info(request):
 
 
 # Payment Views
-
+@login_required
 def make_payment(request):
     if request.method == "POST":
         percentage = request.POST.get('percentage')
@@ -209,7 +207,7 @@ def make_payment(request):
     return render(request, "student/pay_fees.html", context)
 
 
-
+@login_required
 def verify_payment(request, ref: str) -> HttpResponse:
     payment = get_object_or_404(Payment, ref=ref)
 
@@ -224,7 +222,7 @@ def verify_payment(request, ref: str) -> HttpResponse:
     
     
    
-   
+@login_required   
 def payment_receipt(request):
     
     return render(request, 'student/payment_receipt.html')   
@@ -239,7 +237,50 @@ def payment_receipt(request):
  
  
  
- 
+# Superuser views
+
+
+def superuser_login(request):
+    if request.method == 'GET':
+        return render(request, 'dashboard/login.html')
+    elif request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+
+        user = authenticate(request, username=username, password=password)
+
+        if user is not None:
+            if user.is_superuser:
+                login(request, user)
+                messages.success(request, f'Welcome back {username}!')
+                return redirect('superuser_dashboard')
+            else:
+                messages.error(request, 'Invalid credentials.')
+                return render(request, 'dashboard/login.html')
+        else:
+            messages.error(request, 'Invalid credentials.')
+            return render(request, 'dashboard/login.html')
+
+
+def superuser_logout(request):
+    logout(request)
+    messages.success(request, 'Logged out successfully.')
+    return redirect('superuser_login')
+
+
+
+@login_required(login_url='superuser_login')
+def superuser_dashboard(request):
+    fees = Fee.objects.aggregate(total_fees=Sum('total_fees'))['total_fees'] or 0
+    payments = Payment.objects.filter(status=True).aggregate(total_payments=Sum('amount_paid'))['total_payments'] or 0
+    payment_count = Payment.objects.filter(status=True).count()
+
+    context = {'fees': fees, 'payments': payments, 'payment_count': payment_count}
+    return render(request, 'dashboard/dashboard.html',)
+
+
+
+
 
 def student_create(request):
     if request.method == "POST":

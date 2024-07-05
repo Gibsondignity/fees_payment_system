@@ -52,6 +52,11 @@ urlpatterns = [
     path('<str:ref>/', views.verify_payment, name='verify_payment'),  
     path('make_payment', views.make_payment, name='make_payment'),  
     
+    
+    
+    #Superuser views 
+    path('superuser_login', views.superuser_login, name="superuser_login"),
+    path('superuser_dashboard', views.superuser_dashboard, name="superuser_dashboard"),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
