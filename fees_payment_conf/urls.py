@@ -28,35 +28,43 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     
     path('', views.index, name='index'),
-    path('login/', views.custom_login, name='login'),
-    path('reset_password/', views.reset_password, name='reset_password'),
-    path('logout_user/', views.logout_user, name='logout_user'),
+    path('login', views.custom_login, name='login'),
+    path('reset_password', views.reset_password, name='reset_password'),
+    path('logout_user', views.logout_user, name='logout_user'),
     
     # Student URLs
-    path('dashboard', views.student_dashboard, name='student_dashboard'),
-    path('students/new/', views.student_create, name='student_create'),
-    path('students/<int:pk>/edit/', views.student_update, name='student_update'),
-    path('students/<int:pk>/delete/', views.student_delete, name='student_delete'),
+    path('student_dashboard', views.student_dashboard, name='student_dashboard'),
     
     path('tuition', views.student_tuition, name='student_tuition'),
     path('payment_receipt', views.payment_receipt, name='payment_receipt'),
-    path('pay-fees/', views.pay_fees, name='pay_fees'),
+    path('pay-fees', views.pay_fees, name='pay_fees'),
     path('student-info', views.student_info, name='student_info'),
 
-    # Fee URLs
-    path('fees/new/', views.fee_create, name='fee_create'),
-    path('fees/<int:pk>/edit/', views.fee_update, name='fee_update'),
-    path('fees/<int:pk>/delete/', views.fee_delete, name='fee_delete'),
-
-    # Payment URLs
-    path('<str:ref>/', views.verify_payment, name='verify_payment'),  
-    path('make_payment', views.make_payment, name='make_payment'),  
+    # Fee URLs  
     
     
     
     #Superuser views 
+    
     path('superuser_login', views.superuser_login, name="superuser_login"),
-    path('superuser_dashboard', views.superuser_dashboard, name="superuser_dashboard"),
+    path('dashboard', views.superuser_dashboard, name="superuser_dashboard"),
+    
+    
+    path('admit_student', views.admit_student, name='admit_student'),
+    # path('students/<int:pk>/edit', views.student_update, name='student_update'),
+    # path('students/<int:pk>/delete', views.student_delete, name='student_delete'),
+    
+    
+    path('add_fees', views.add_fees, name='add_fees'),
+    path('fees/<int:pk>/edit', views.fee_update, name='fee_update'),
+    path('fees/<int:pk>/delete', views.fee_delete, name='fee_delete'),
+    
+    
+    # Payment URLs
+    path('<str:ref>', views.verify_payment, name='verify_payment'),  
+    path('make_payment', views.make_payment, name='make_payment'),
+    
+    
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

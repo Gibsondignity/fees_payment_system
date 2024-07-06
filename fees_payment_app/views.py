@@ -4,7 +4,7 @@ from django.conf import settings
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse
 from django.urls import reverse
-from .models import Student, Fee, Payment, Receipt
+from .models import *
 from .forms import StudentForm, FeeForm, PaymentForm, ReceiptForm
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
@@ -77,7 +77,7 @@ def reset_password(request):
 def student_dashboard(request):
     user = request.user
     student = get_object_or_404(Student, user=user)
-    fees = Fee.objects.filter(facaulty=student.facaulty, level=student.current_level, nationality=student.nationality)
+    fees = Fee.objects.filter(student=student)
     payments = Payment.objects.filter(student=student, status=True)
     payment_count = Payment.objects.filter(student=student, status=True).count()
 
@@ -110,7 +110,7 @@ def student_tuition(request):
     
     user = request.user
     student = get_object_or_404(Student, user=user)
-    fees = Fee.objects.filter(facaulty=student.facaulty, level=student.current_level, student_category=student.student_category)
+    fees = Fee.objects.filter(student=student)
     
     payments = Payment.objects.filter(student=student, status=True)
     total_fees = fees.aggregate(Sum('total_fees'))['total_fees__sum'] or 0
@@ -128,7 +128,7 @@ def student_tuition(request):
 def pay_fees(request):
     user = request.user
     student = get_object_or_404(Student, user=user)
-    fees = Fee.objects.filter(facaulty=student.facaulty, level=student.current_level, student_category=student.student_category)
+    fees = Fee.objects.filter(student=student)
 
     context = {'student':student, 'fees':fees}
         
@@ -138,7 +138,7 @@ def pay_fees(request):
 @login_required
 def student_fee_history(request, student_id):
     student = get_object_or_404(Student, pk=student_id)
-    fees = Fee.objects.filter(facaulty=student.facaulty, level=student.current_level, student_category=student.student_category)
+    fees = Fee.objects.filter(facaulty=student)
     payments = Payment.objects.filter(student=student)
 
     total_fees = fees.aggregate(Sum('tuition_amount'))['tuition_amount__sum'] or 0
@@ -280,12 +280,15 @@ def superuser_dashboard(request):
 def admit_student(request):
     if request.method == "POST":
         form = StudentForm(request.POST)
+        
         if form.is_valid():
             student = form.save()
             return redirect('student_detail', pk=student.pk)
     else:
         form = StudentForm()
-    return render(request, 'dashboard/admit_student.html', {'form': form})
+        facauties = Facaulty.objects.all().order_by('-id')
+        academic_years = Academic_Year.objects.all().order_by('-id')
+    return render(request, 'dashboard/admit_student.html', {'form': form, 'facauties':facauties, 'academic_years': academic_years})
 
 
 

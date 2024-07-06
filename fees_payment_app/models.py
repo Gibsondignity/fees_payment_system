@@ -10,7 +10,7 @@ import datetime
 
 class Academic_Year(models.Model):
     YEARS = [(r, r) for r in range(datetime.datetime.now().year, 2020, -1)]
-    year = models.CharField(max_length=4, choices=YEARS)
+    year = models.CharField(max_length=20)
     date_created = models.DateField(auto_now=True)
     date_updated = models.DateField(auto_now_add=True)
 
@@ -18,7 +18,7 @@ class Academic_Year(models.Model):
         return self.get_year_display()
     
 
-class Faculty(models.Model):
+class Facaulty(models.Model):
     name = models.CharField(max_length=100)
     date_created = models.DateField(auto_now=True)
     date_updated = models.DateField(auto_now_add=True)
@@ -57,14 +57,15 @@ class Student(models.Model):
     )
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     student_id = models.CharField(max_length=20, unique=True)
-    full_name = models.CharField(max_length=100, null=True, blank=True)
+    first_name = models.CharField(max_length=100, null=True, blank=True)
+    last_name = models.CharField(max_length=100, null=True, blank=True)
     email = models.EmailField(unique=True)
     date_of_birth = models.DateField(null=True)
     address = models.CharField(max_length=255, null=True, blank=True)
     phone_number = models.CharField(max_length=15, null=True, blank=True)
     enrollment_date = models.DateField(null=True)
     completion_date = models.DateField(null=True)
-    facaulty = models.ForeignKey(Faculty, on_delete=models.CASCADE, null=True, blank=True)
+    facaulty = models.ForeignKey(Facaulty, on_delete=models.CASCADE, null=True, blank=True)
     entry_level = models.CharField(max_length=255, choices=level_choices, null=True)
     current_level = models.CharField(max_length=255, choices=level_choices, null=True)
     nationality = models.CharField(max_length=255, choices=nationality_choices, null=True)
