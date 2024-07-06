@@ -42,26 +42,18 @@ urlpatterns = [
 
     # Fee URLs  
     
-    
-    
     #Superuser views 
     
     path('superuser_login', views.superuser_login, name="superuser_login"),
     path('dashboard', views.superuser_dashboard, name="superuser_dashboard"),
     
-    
     path('admit_student', views.admit_student, name='admit_student'),
-    # path('students/<int:pk>/edit', views.student_update, name='student_update'),
-    # path('students/<int:pk>/delete', views.student_delete, name='student_delete'),
-    
-    
-    path('add_fees', views.add_fees, name='add_fees'),
-    path('fees/<int:pk>/edit', views.fee_update, name='fee_update'),
-    path('fees/<int:pk>/delete', views.fee_delete, name='fee_delete'),
-    
+    path('student_list', views.student_list, name='student_list'),
     
     # Payment URLs
     path('make_payment', views.make_payment, name='make_payment'),
+    path('view_student/<str:student_id>', views.view_student, name='view_student'),  
+    
     path('<str:ref>', views.verify_payment, name='verify_payment'),  
     
     

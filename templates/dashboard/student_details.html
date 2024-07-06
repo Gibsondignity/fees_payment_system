@@ -1,0 +1,70 @@
+{% extends "dashboard/index.html" %}
+
+
+{% load static %}
+
+{% block content %}
+<div class="content-body">
+    <!-- row -->
+    <div class="container-fluid">
+
+<div class="card">
+    <div class="card-header">
+        <h4 class="card-title">{{student.first_name}} {{student.last_name}}</h4>
+    </div>
+    <div class="card-body">
+        <p><strong>Student ID: </strong>{{student.student_id}}</p>
+        <p><strong>Email: </strong>{{student.email}}</p>
+        <p><strong>Nationality: </strong>{{student.nationality}}</p>
+        <p><strong>Category: </strong>{{student.student_category}}</p>
+        
+        <h5>Fees</h5>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Academic Year</th>
+                    <th>Tuition Amount</th>
+                    <th>Other Charges</th>
+                    <th>Total Fees</th>
+                    <th>Nationality</th>
+                    <th>Due Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for fee in fees %}
+                <tr>
+                    <td>{{fee.academic_year}}</td>
+                    <td>{{fee.tuition_amount}}</td>
+                    <td>{{fee.other_charges}}</td>
+                    <td>{{fee.total_fees}}</td>
+                    <td>{{fee.nationality}}</td>
+                    <td>{{fee.due_date}}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <h5>Payments</h5>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Amount</th>
+                    <th>Date</th>
+                    <th>Method</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for payment in payments %}
+                <tr>
+                    <td>{{payment.amount_paid}}</td>
+                    <td>{{payment.payment_date}}</td>
+                    <td>{{payment.payment_method}}</td>
+                    <td>{{payment.status}}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock content %}

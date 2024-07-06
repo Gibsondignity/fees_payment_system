@@ -1,0 +1,85 @@
+{% extends "dashboard/index.html" %}
+
+
+{% load static %}
+
+{% block content %}
+<div class="content-body">
+    <!-- row -->
+    <div class="container-fluid">
+            
+        <div class="row">
+        
+        
+            <div class="col-xl-12 col-xxl-12 col-lg-12 col-md-12 col-sm-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">Student List</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive recentOrderTable">
+                            <table class="table verticle-middle table-responsive-md" id="example1">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Student ID</th>
+                                        <th scope="col">First Name</th>
+                                        <th scope="col">Last Name</th>
+                                        <th scope="col">Email</th>
+                                        <th scope="col">Nationality</th>
+                                        <th scope="col">Category</th>
+                                        <th scope="col">View</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for student in students %}
+                                    <tr>
+                                        <td>{{student.student_id}}</td>
+                                        <td>{{student.first_name}}</td>
+                                        <td>{{student.last_name}}</td>
+                                        <td>{{student.email}}</td>
+                                        <td>{{student.nationality}}</td>
+                                        <td>{{student.student_category}}</td>
+                                        <td>
+                                            <a href="{% url 'view_student' student.student_id %}" class="btn btn-primary btn-sm">
+                                                <i class="la la-eye"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                    
+                                    
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</div>
+
+
+{% endblock content %}
+
+{% block script %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        $('#example1').DataTable( {
+            dom: 'Bfrtip',
+            buttons: [
+                'copy', 'csv', 'excel', 'pdf', 'print'
+            ]
+        } );
+    } );
+</script>
+{% endblock script %}

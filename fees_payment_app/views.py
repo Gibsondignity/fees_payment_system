@@ -264,15 +264,33 @@ def superuser_logout(request):
     return redirect('superuser_login')
 
 
-
+from django.db.models import F
 @login_required(login_url='superuser_login')
 def superuser_dashboard(request):
     fees = Fee.objects.aggregate(total_fees=Sum('total_fees'))['total_fees'] or 0
     payments = Payment.objects.filter(status=True).aggregate(total_payments=Sum('amount_paid'))['total_payments'] or 0
     payment_count = Payment.objects.filter(status=True).count()
+    total_students = Student.objects.count()
+    total_payment_this_month = Payment.objects.filter(date_created__month=timezone.now().month, date_created__year=timezone.now().year, status=True).aggregate(total_payments=Sum('amount_paid'))['total_payments'] or 0
+    total_payment_this_year = Payment.objects.filter(date_created__year=timezone.now().year, status=True).aggregate(total_payments=Sum('amount_paid'))['total_payments'] or 0
+    total_failed_payments = Payment.objects.filter(status=False).count()
+    total_pending_payment = Payment.objects.filter(status=False).aggregate(total_pending=Sum('amount_paid'))['total_pending'] or 0
+    
+    total_arrears = Fee.objects.annotate(total_payments=Sum('payment__amount_paid'), arrears=F('total_fees') - F('total_payments'))
+    total_arrears = total_arrears.aggregate(total_arrears=Sum('arrears'))['total_arrears'] or 0
 
-    context = {'fees': fees, 'payments': payments, 'payment_count': payment_count}
-    return render(request, 'dashboard/dashboard.html',)
+    context = {
+        'fees': fees,
+        'payments': payments,
+        'payment_count': payment_count,
+        'total_students': total_students,
+        'total_payment_this_month': total_payment_this_month,
+        'total_payment_this_year': total_payment_this_year,
+        'total_failed_payments': total_failed_payments,
+        'total_pending_payment': total_pending_payment,
+        'total_arrears': total_arrears
+    }
+    return render(request, 'dashboard/dashboard.html', context)
 
 
 
@@ -323,9 +341,19 @@ def admit_student(request):
 
 
 
-def student_list():
+def student_list(request):
+    students = Student.objects.all()
+    return render(request, 'dashboard/student_list.html', {'students': students})
+
+
+
+def view_student(request, student_id):
     
-    return render()
+    student = Student.objects.filter(student_id=student_id).first()
+    fees = Fee.objects.filter(student=student).all()
+    payments = Payment.objects.filter(student=student).all()
+    context = {'student': student, 'fees': fees, 'payments':payments}
+    return render(request, 'dashboard/student_details.html',context)
 
 
 def update_student(request, pk):
@@ -342,13 +370,6 @@ def update_student(request, pk):
 
 
 
-def delete_student(request, pk):
-    student = get_object_or_404(Student, pk=pk)
-    if request.method == "POST":
-        student.delete()
-        return redirect('student_list')
-    return render(request, 'student_confirm_delete.html', {'student': student})
-
 
 
 def add_fees(request):
@@ -360,48 +381,5 @@ def add_fees(request):
     else:
         form = FeeForm()
     return render(request, 'dashboard/add_fees.html', {'form': form})
-
-
-
-
-def fee_update(request, pk):
-    fee = get_object_or_404(Fee, pk=pk)
-    if request.method == "POST":
-        form = FeeForm(request.POST, instance=fee)
-        if form.is_valid():
-            fee = form.save()
-            return redirect('fee_detail', pk=fee.pk)
-    else:
-        form = FeeForm(instance=fee)
-    return render(request, 'fee_form.html', {'form': form})
-
-
-
-def fee_delete(request, pk):
-    fee = get_object_or_404(Fee, pk=pk)
-    if request.method == "POST":
-        fee.delete()
-        return redirect('fee_list')
-    return render(request, 'fee_confirm_delete.html', {'fee': fee})
-
-
-
-
-
-
-# Facauty Views
-
-def facauty(request):
-    
-    return render(request, 'dashboard/facauty.html')
-
-
-
-# Academic Year Views
-
-def academic_year(request):
-    
-    return render(request, 'dashboard/academic_year.html')
-
 
 
