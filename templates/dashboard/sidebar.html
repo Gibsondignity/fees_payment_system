@@ -21,17 +21,20 @@
                 <ul aria-expanded="false">
                     <li><a href="{% url 'student_tuition' %}">Admin Student</a></li>
                     <li><a href="{% url 'pay_fees' %}">Student List</a></li>
-                    <li><a href="{% url 'payment_receipt' %}">Payment Receipt</a></li>
+                    <li><a href="{% url 'payment_receipt' %}">Faculty</a></li>
+                    <li><a href="{% url 'payment_receipt' %}">Academic Year</a></li>
                 </ul>
             </li>		
 
-            <li><a class="has-arrow" href="javascript:void()" aria-expanded="false">
+            <li>
+                <a class="has-arrow" href="javascript:void()" aria-expanded="false">
                     <i class="la la-dollar"></i>
                     <span class="nav-text">Fees</span>
                 </a>
                 <ul aria-expanded="false">
                     <li><a href="{% url 'student_tuition' %}">Fees Collection</a></li>
                     <li><a href="{% url 'pay_fees' %}">Add Fees</a></li>
+                    <li><a href="{% url 'pay_fees' %}">Fees List</a></li>
                 </ul>
             </li>					
 

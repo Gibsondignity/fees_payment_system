@@ -276,8 +276,8 @@ def superuser_dashboard(request):
 
 
 
-
-def student_create(request):
+# Admin Student View
+def admit_student(request):
     if request.method == "POST":
         form = StudentForm(request.POST)
         if form.is_valid():
@@ -285,11 +285,11 @@ def student_create(request):
             return redirect('student_detail', pk=student.pk)
     else:
         form = StudentForm()
-    return render(request, 'student_form.html', {'form': form})
+    return render(request, 'dashboard/admit_student.html', {'form': form})
 
 
 
-def student_update(request, pk):
+def update_student(request, pk):
     student = get_object_or_404(Student, pk=pk)
     if request.method == "POST":
         form = StudentForm(request.POST, instance=student)
@@ -303,7 +303,7 @@ def student_update(request, pk):
 
 
 
-def student_delete(request, pk):
+def delete_student(request, pk):
     student = get_object_or_404(Student, pk=pk)
     if request.method == "POST":
         student.delete()
@@ -312,7 +312,7 @@ def student_delete(request, pk):
 
 
 
-def fee_create(request):
+def add_fees(request):
     if request.method == "POST":
         form = FeeForm(request.POST)
         if form.is_valid():
@@ -320,7 +320,7 @@ def fee_create(request):
             return redirect('fee_detail', pk=fee.pk)
     else:
         form = FeeForm()
-    return render(request, 'fee_form.html', {'form': form})
+    return render(request, 'dashboard/add_fees.html', {'form': form})
 
 
 
@@ -347,19 +347,22 @@ def fee_delete(request, pk):
 
 
 
-def calculate_arrears(student):
-    # Get all fees for the student
-    fees = Fee.objects.filter(course__enrollment__student=student)
-    total_fees = fees.aggregate(Sum('amount'))['amount__sum'] or 0
 
-    # Get all payments made by the student
-    payments = Payment.objects.filter(student=student)
-    total_payments = payments.aggregate(Sum('amount_paid'))['amount_paid__sum'] or 0
 
-    # Calculate arrears
-    arrears = total_fees - total_payments
-    return arrears
 
+# Facauty Views
+
+def facauty(request):
+    
+    return render(request, 'dashboard/facauty.html')
+
+
+
+# Academic Year Views
+
+def academic_year(request):
+    
+    return render(request, 'dashboard/academic_year.html')
 
 
 
