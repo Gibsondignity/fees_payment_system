@@ -4,7 +4,7 @@ from django.conf import settings
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse
 from django.urls import reverse
-from .models import Student, Fee, Payment, Receipt, Student_Areas
+from .models import Student, Fee, Payment, Receipt
 from .forms import StudentForm, FeeForm, PaymentForm, ReceiptForm
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
@@ -116,11 +116,6 @@ def student_tuition(request):
     total_fees = fees.aggregate(Sum('total_fees'))['total_fees__sum'] or 0
     total_payments = payments.aggregate(Sum('amount_paid'))['amount_paid__sum'] or 0
     arrears = Decimal(0)
-    if total_payments < total_fees:
-        areas = Student_Areas.objects.filter(student=student)
-        fees = areas.filter(amount_paid__lt=('amount_owed')).union(fees)
-        for area in areas:
-            arrears += area.amount_owed - area.amount_paid
     
     context = {'student':student, 'fees':fees, 'arrears':arrears}
     

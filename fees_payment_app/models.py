@@ -76,46 +76,17 @@ class Student(models.Model):
         return f"{self.full_name} ({self.student_id})"
 
 
-
-
-class Student_Areas(models.Model):
-    student = models.ForeignKey(Student, on_delete=models.CASCADE)
-    amount = models.DecimalField(max_digits=5, decimal_places=2, default=0)
-    other_charges = models.DecimalField(max_digits=5, decimal_places=2, default=0)
-    date_created = models.DateField(auto_now=True, null=True)
-    date_updated = models.DateField(auto_now_add=True, null=True)
-    
-    def __str__(self):
-        return str(self.student, self.amount)
     
     
 class Fee(models.Model):
-
-    level_choices = (
-        ('Level 100', 'Level 100'), 
-        ('Level 200', 'Level 200'), 
-        ('Level 300', 'Level 300'), 
-        ('Level 400', 'Level 400')
-    )
-    category_choices = (
-        ('Freshmen', 'Freshmen'), 
-        ('Top-up', 'Top-up'), 
-        ('Continuing', 'Continuing')
-    )
-    percentage_choices = (
-        ('100%', '100%'), 
-        ('50%', '50%')
-    )
+    
     nationality_choices = (
         ('Ghanaian', 'Ghanaian'), 
         ('International Student', 'International Student')
     )
-    facaulty = models.ForeignKey(Faculty, on_delete=models.CASCADE, null=True)
+    
     academic_year = models.ForeignKey(Academic_Year, on_delete=models.CASCADE, null=True)
     student = models.ForeignKey(Student, on_delete=models.CASCADE, null=True)
-    level = models.CharField(max_length=255, choices=level_choices, null=True)
-    student_category = models.CharField(max_length=255, choices=category_choices, null=True)
-    percentage = models.CharField(max_length=10, choices=percentage_choices, default='100%')
     tuition_amount = models.DecimalField(max_digits=10, decimal_places=2, null=True)
     other_charges = models.DecimalField(max_digits=10, decimal_places=2, null=True)
     total_fees = models.DecimalField(max_digits=10, decimal_places=2, default=0)
