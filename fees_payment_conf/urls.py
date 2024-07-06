@@ -28,7 +28,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     
     path('', views.index, name='index'),
-    path('login', views.custom_login, name='login'),
+    path('login/', views.custom_login, name='login'),
     path('reset_password', views.reset_password, name='reset_password'),
     path('logout_user', views.logout_user, name='logout_user'),
     
@@ -61,8 +61,9 @@ urlpatterns = [
     
     
     # Payment URLs
-    path('<str:ref>', views.verify_payment, name='verify_payment'),  
     path('make_payment', views.make_payment, name='make_payment'),
+    path('<str:ref>', views.verify_payment, name='verify_payment'),  
+    
     
     
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

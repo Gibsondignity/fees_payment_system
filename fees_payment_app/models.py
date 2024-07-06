@@ -15,7 +15,7 @@ class Academic_Year(models.Model):
     date_updated = models.DateField(auto_now_add=True)
 
     def __str__(self):
-        return self.get_year_display()
+        return self.year
     
 
 class Facaulty(models.Model):
@@ -55,12 +55,12 @@ class Student(models.Model):
         ('Top-up', 'Top-up'), 
         ('Continuing', 'Continuing')
     )
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True)
     student_id = models.CharField(max_length=20, unique=True)
     first_name = models.CharField(max_length=100, null=True, blank=True)
     last_name = models.CharField(max_length=100, null=True, blank=True)
     email = models.EmailField(unique=True)
-    date_of_birth = models.DateField(null=True)
+    date_of_birth = models.DateField(null=True, blank=True)
     address = models.CharField(max_length=255, null=True, blank=True)
     phone_number = models.CharField(max_length=15, null=True, blank=True)
     enrollment_date = models.DateField(null=True)
@@ -74,7 +74,7 @@ class Student(models.Model):
     date_updated = models.DateField(auto_now_add=True, null=True)
     
     def __str__(self):
-        return f"{self.full_name} ({self.student_id})"
+        return f"{self.first_name} {self.last_name} ({self.student_id})"
 
 
     
@@ -86,14 +86,14 @@ class Fee(models.Model):
         ('International Student', 'International Student')
     )
     
-    academic_year = models.ForeignKey(Academic_Year, on_delete=models.CASCADE, null=True)
-    student = models.ForeignKey(Student, on_delete=models.CASCADE, null=True)
-    tuition_amount = models.DecimalField(max_digits=10, decimal_places=2, null=True)
-    other_charges = models.DecimalField(max_digits=10, decimal_places=2, null=True)
-    total_fees = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    academic_year = models.ForeignKey(Academic_Year, on_delete=models.CASCADE, null=True, blank=True)
+    student = models.ForeignKey(Student, on_delete=models.CASCADE, blank=True, null=True)
+    tuition_amount = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    other_charges = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    total_fees = models.DecimalField(max_digits=10, decimal_places=2, default=0, blank=True)
     nationality = models.CharField(max_length=255, choices=nationality_choices, null=True)
     date_created = models.DateField(auto_now=True, null=True)
-    date_updated = models.DateField(auto_now_add=True, null=True)
+    date_updated = models.DateField(auto_now_add=True, null=True, blank=True)
     
     def add_total_fees(self):
         self.total_fees = self.tuition_amount + self.other_charges
@@ -103,7 +103,7 @@ class Fee(models.Model):
         super().save(*args, **kwargs)
     
     def __str__(self):
-        return f"{self.facaulty.name} | {self.academic_year} Acd. Year | Fee: {self.total_fees}"
+        return f"{self.student} | {self.academic_year.year} Acd. Year | Fee: {self.total_fees}"
 
 
 

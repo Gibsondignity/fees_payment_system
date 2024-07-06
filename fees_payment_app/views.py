@@ -2,12 +2,13 @@
 from decimal import Decimal
 from django.conf import settings
 from django.shortcuts import render, get_object_or_404, redirect
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.urls import reverse
 from .models import *
 from .forms import StudentForm, FeeForm, PaymentForm, ReceiptForm
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
@@ -279,17 +280,52 @@ def superuser_dashboard(request):
 # Admin Student View
 def admit_student(request):
     if request.method == "POST":
-        form = StudentForm(request.POST)
-        
-        if form.is_valid():
-            student = form.save()
-            return redirect('student_detail', pk=student.pk)
+        try:
+            student_form = StudentForm(request.POST)
+            fees_form = FeeForm(request.POST)
+            
+            if student_form.is_valid() and fees_form.is_valid():
+                email = request.POST.get('email')
+                student_id = request.POST.get('student_id')
+                user = User.objects.filter(username=student_id).first()
+                
+                if not user:
+                    email = request.POST.get('email')
+                    student_id = request.POST.get('student_id')
+                    user = User.objects.create_user(student_id, email, student_id)
+                    user.save()
+                else:
+                    print('Student ID already exist!')
+                    return JsonResponse({'error': 'Student ID already exist!'}, status=400)
+                
+                if student_form.is_valid():
+                    student = student_form.save(commit=False)
+                    student.user = user
+                    student.save()
+                    
+                if fees_form.is_valid():
+                    fee = fees_form.save(commit=False)
+                    fee.student = student
+                    fee.save()
+                
+                return JsonResponse({'Success':'Success'}, status=200)
+            else:
+                print(student_form.errors, fees_form.errors)
+                return JsonResponse({'error': 'Sorry an error occured'}, status=500)
+        except Exception as e:
+            print(e)
+            return JsonResponse({'Error': 'An error occured trying to create student'}, status=400)
     else:
         form = StudentForm()
         facauties = Facaulty.objects.all().order_by('-id')
         academic_years = Academic_Year.objects.all().order_by('-id')
     return render(request, 'dashboard/admit_student.html', {'form': form, 'facauties':facauties, 'academic_years': academic_years})
 
+
+
+def student_list():
+    
+    return render()
 
 
 def update_student(request, pk):

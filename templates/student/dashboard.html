@@ -37,7 +37,6 @@
                             </span>
                             <div class="media-body text-white">
                                 <p class="mb-1">Total Fees</p>
-                                <small>Current Year</small>
                                 <h3 class="text-white">{{total_fees}}</h3>
                                 <div class="progress mb-2 bg-white">
                                     <div class="progress-bar progress-animated bg-light" style="width: 50%"></div>
@@ -56,7 +55,6 @@
                                 GH₵
                             </span>
                             <div class="media-body text-white">
-                                <p class="mb-1">Arrears</p>
                                 <small>Previous Year(s)</small>
                                 <h3 class="text-white">{{arrears}}</h3>
                                 <div class="progress mb-2 bg-white">
@@ -115,6 +113,9 @@
                                         <td>{{payment.date_created}}</td>
                                         <td>
                                             <span class="badge badge-rounded {{payment.status|lower}}">{{payment.status}}</span>
+                                        </td>
+                                        <td>
+                                            <span class="badge badge-rounded {{payment.status|lower}}">{{payment.fee}}</span>
                                         </td>
                                         <td></td>
                                         
